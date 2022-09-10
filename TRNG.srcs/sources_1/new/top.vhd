@@ -37,8 +37,10 @@ architecture Behavioral of top is
     signal number : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
     signal enable : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
     
-    signal byte : std_logic_vector (7 downto 0);
+    signal byte : std_logic_vector (7 downto 0) := (others => '0');
     signal index : std_logic_vector (1 downto 0) := "00";
+    
+    signal BTNC_prev : std_logic;
     
 begin
 
@@ -66,15 +68,18 @@ begin
     
     process(clk)
     begin
-        if rising_edge(clk) and BTNC='1' then
-            case conv_integer(index) is
-                when 3 => number(31 downto 24) <= byte and enable(31 downto 24);
-                when 2 => number(23 downto 16) <= byte and enable(23 downto 16);
-                when 1 => number(15 downto  8) <= byte and enable(15 downto  8);
-                when 0 => number( 7 downto  0) <= byte and enable( 7 downto  0);
-            end case;
+        if rising_edge(clk) then
+            if (BTNC = '1' and BTNC_prev = '0') or (index /= "00") then
+                case conv_integer(index) is
+                    when 3 => number(31 downto 24) <= byte and enable(31 downto 24);
+                    when 2 => number(23 downto 16) <= byte and enable(23 downto 16);
+                    when 1 => number(15 downto  8) <= byte and enable(15 downto  8);
+                    when 0 => number( 7 downto  0) <= byte and enable( 7 downto  0);
+                end case;
+                index <= index + 1;
+            end if;
             
-            index <= index + 1;
+            BTNC_prev <= BTNC;
         end if;
     end process;
     
