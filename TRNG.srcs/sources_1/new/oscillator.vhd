@@ -31,7 +31,7 @@ architecture Behavioral of oscillator is
 begin
 
     generate_chain: for i in 1 to length-1 generate
-        chain(i) <= not chain(i-1) after (10 ns * i);
+        chain(i) <= not chain(i-1);
     end generate;
     chain(0) <= not chain(length-1) or rst;
 
