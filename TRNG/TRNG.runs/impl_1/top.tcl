@@ -169,7 +169,7 @@ set rc [catch {
 OPTRACE "read constraints: opt_design" START { }
 OPTRACE "read constraints: opt_design" END { }
 OPTRACE "opt_design" START { }
-  opt_design -directive ExploreWithRemap
+  opt_design -directive Explore
 OPTRACE "opt_design" END { }
 OPTRACE "read constraints: opt_design_post" START { }
 OPTRACE "read constraints: opt_design_post" END { }
@@ -203,7 +203,7 @@ OPTRACE "implement_debug_core" START { }
 OPTRACE "implement_debug_core" END { }
   } 
 OPTRACE "place_design" START { }
-  place_design 
+  place_design -directive Explore
 OPTRACE "place_design" END { }
 OPTRACE "read constraints: place_design_post" START { }
 OPTRACE "read constraints: place_design_post" END { }
@@ -226,7 +226,36 @@ if {$rc} {
 }
 
 OPTRACE "Phase: Place Design" END { }
+OPTRACE "Phase: Physical Opt Design" START { ROLLUP_AUTO }
+start_step phys_opt_design
+set ACTIVE_STEP phys_opt_design
+set rc [catch {
+  create_msg_db phys_opt_design.pb
+OPTRACE "read constraints: phys_opt_design" START { }
+OPTRACE "read constraints: phys_opt_design" END { }
+OPTRACE "phys_opt_design" START { }
+  phys_opt_design -directive Explore
+OPTRACE "phys_opt_design" END { }
+OPTRACE "read constraints: phys_opt_design_post" START { }
+OPTRACE "read constraints: phys_opt_design_post" END { }
+OPTRACE "Post-Place Phys Opt Design: write_checkpoint" START { CHECKPOINT }
+  write_checkpoint -force top_physopt.dcp
+OPTRACE "Post-Place Phys Opt Design: write_checkpoint" END { }
+OPTRACE "phys_opt_design report" START { REPORT }
+OPTRACE "phys_opt_design report" END { }
+  close_msg_db -file phys_opt_design.pb
+} RESULT]
+if {$rc} {
+  step_failed phys_opt_design
+  return -code error $RESULT
+} else {
+  end_step phys_opt_design
+  unset ACTIVE_STEP 
+}
+
+OPTRACE "Phase: Physical Opt Design" END { }
 OPTRACE "Phase: Route Design" START { ROLLUP_AUTO }
+  set_msg_config -source 4 -id {Route 35-39} -severity "critical warning" -new_severity warning
 start_step route_design
 set ACTIVE_STEP route_design
 set rc [catch {
@@ -234,7 +263,7 @@ set rc [catch {
 OPTRACE "read constraints: route_design" START { }
 OPTRACE "read constraints: route_design" END { }
 OPTRACE "route_design" START { }
-  route_design 
+  route_design -directive Explore -tns_cleanup
 OPTRACE "route_design" END { }
 OPTRACE "read constraints: route_design_post" START { }
 OPTRACE "read constraints: route_design_post" END { }
@@ -246,7 +275,7 @@ OPTRACE "route_design reports" START { REPORT }
   create_report "impl_1_route_report_methodology_0" "report_methodology -file top_methodology_drc_routed.rpt -pb top_methodology_drc_routed.pb -rpx top_methodology_drc_routed.rpx"
   create_report "impl_1_route_report_power_0" "report_power -file top_power_routed.rpt -pb top_power_summary_routed.pb -rpx top_power_routed.rpx"
   create_report "impl_1_route_report_route_status_0" "report_route_status -file top_route_status.rpt -pb top_route_status.pb"
-  create_report "impl_1_route_report_timing_summary_0" "report_timing_summary -max_paths 10 -report_unconstrained -file top_timing_summary_routed.rpt -pb top_timing_summary_routed.pb -rpx top_timing_summary_routed.rpx -warn_on_violation "
+  create_report "impl_1_route_report_timing_summary_0" "report_timing_summary -max_paths 10 -report_unconstrained -file top_timing_summary_routed.rpt -pb top_timing_summary_routed.pb -rpx top_timing_summary_routed.rpx"
   create_report "impl_1_route_report_incremental_reuse_0" "report_incremental_reuse -file top_incremental_reuse_routed.rpt"
   create_report "impl_1_route_report_clock_utilization_0" "report_clock_utilization -file top_clock_utilization_routed.rpt"
   create_report "impl_1_route_report_bus_skew_0" "report_bus_skew -warn_on_violation -file top_bus_skew_routed.rpt -pb top_bus_skew_routed.pb -rpx top_bus_skew_routed.rpx"
@@ -267,6 +296,38 @@ OPTRACE "route_design write_checkpoint" END { }
 
 OPTRACE "route_design misc" END { }
 OPTRACE "Phase: Route Design" END { }
+OPTRACE "Phase: Phys-Opt Design" START { ROLLUP_AUTO }
+start_step post_route_phys_opt_design
+set ACTIVE_STEP post_route_phys_opt_design
+set rc [catch {
+  set tool_flow [get_property -quiet TOOL_FLOW [current_project -quiet]]
+  if {$tool_flow eq {SDx}} {send_msg_id {101-1} {status} {Starting optional post-route physical design optimization.} }
+  create_msg_db post_route_phys_opt_design.pb
+OPTRACE "phys_opt_design" START { }
+  phys_opt_design -directive Explore
+OPTRACE "phys_opt_design" END { }
+OPTRACE "Post-Route Phys Opt Design: write_checkpoint" START { CHECKPOINT }
+  write_checkpoint -force top_postroute_physopt.dcp
+OPTRACE "Post-Route Phys Opt Design: write_checkpoint" END { }
+OPTRACE "phys_opt_design reports" START { REPORT }
+  create_report "impl_1_post_route_phys_opt_report_timing_summary_0" "report_timing_summary -max_paths 10 -report_unconstrained -warn_on_violation -file top_timing_summary_postroute_physopted.rpt -pb top_timing_summary_postroute_physopted.pb -rpx top_timing_summary_postroute_physopted.rpx"
+  create_report "impl_1_post_route_phys_opt_report_bus_skew_0" "report_bus_skew -warn_on_violation -file top_bus_skew_postroute_physopted.rpt -pb top_bus_skew_postroute_physopted.pb -rpx top_bus_skew_postroute_physopted.rpx"
+OPTRACE "phys_opt_design reports" END { }
+OPTRACE "phys_opt_design misc" START { }
+  close_msg_db -file post_route_phys_opt_design.pb
+  set tool_flow [get_property TOOL_FLOW [current_project]]
+  if {$tool_flow eq {SDx}} {send_msg_id {101-1} {status} {Finished optional post-route physical design optimization.} }
+} RESULT]
+if {$rc} {
+  step_failed post_route_phys_opt_design
+  return -code error $RESULT
+} else {
+  end_step post_route_phys_opt_design
+  unset ACTIVE_STEP 
+}
+
+OPTRACE "phys_opt_design misc" END { }
+OPTRACE "Phase: Phys-Opt Design" END { }
 OPTRACE "Phase: Write Bitstream" START { ROLLUP_AUTO }
 OPTRACE "write_bitstream setup" START { }
 start_step write_bitstream

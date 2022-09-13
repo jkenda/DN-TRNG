@@ -120,7 +120,7 @@ read_checkpoint -auto_incremental -incremental /home/jakob/Dokumenti/DN/projekt/
 close [open __synthesis_is_running__ w]
 
 OPTRACE "synth_design" START { }
-synth_design -top top -part xc7a50tcsg324-1
+synth_design -top top -part xc7a50tcsg324-1 -directive PerformanceOptimized -fsm_extraction one_hot -keep_equivalent_registers -resource_sharing off -no_lc -shreg_min_size 5
 OPTRACE "synth_design" END { }
 if { [get_msg_config -count -severity {CRITICAL WARNING}] > 0 } {
  send_msg_id runtcl-6 info "Synthesis results are not added to the cache due to CRITICAL_WARNING"

@@ -11,7 +11,7 @@ entity uart is
         rst          : in  STD_LOGIC;
         UART_RXD_OUT : out STD_LOGIC;
         UART_CTS     : in  STD_LOGIC;
-        data         : in  STD_LOGIC
+        data         : in  STD_LOGIC_VECTOR(7 downto 0)
     );
 end uart;
 
@@ -29,7 +29,7 @@ architecture Behavioral of uart is
         );
     end component;
     
-    signal mem : STD_LOGIC := '0';
+    signal mem : STD_LOGIC_VECTOR(7 downto 0);
     
     signal CTS_prev : STD_LOGIC;
     signal pres_rst : STD_LOGIC;
@@ -38,7 +38,7 @@ architecture Behavioral of uart is
     signal E     : STD_LOGIC;
     
     constant clk_frequency : integer := 100_000_000;
-    constant baud_rate     : integer := 115200;
+    constant baud_rate     : integer := 460800;
     constant char : UNSIGNED(7 downto 0) := to_unsigned(46, 8);
     
 begin
@@ -55,18 +55,22 @@ begin
         );
         
     UART_RXD_OUT <= '0' when to_integer(index)  = 0 else 
-                    '1' when to_integer(index) >= 9 or rst='1' else 
-                    mem;
+                    '1' when to_integer(index) >= 9 else 
+                    mem(to_integer(index - 1));
     
     process(clk)
     begin
         if rising_edge(clk) then
             if rst='1' then
-                mem   <= '0';
+                mem   <= (others => '0');
                 index <= to_unsigned(9, 4);
-            elsif E='1' and (UART_CTS='1' or index < 9) then
-                mem   <= data;
-                index <= (index + 1) mod 10;
+            elsif E='1' then
+                if index = 0 then
+                    mem   <= data;
+                end if;
+                if UART_CTS='1' or index < 9 then
+                    index <= (index + 1) mod 10;
+                end if;             
             end if;
             
             if UART_CTS='1' and CTS_prev='0' then

@@ -62,7 +62,7 @@ architecture Behavioral of top is
             rst          : in  STD_LOGIC;
             UART_RXD_OUT : out STD_LOGIC;
             UART_CTS     : in  STD_LOGIC;
-            data         : in  STD_LOGIC
+            data         : in  STD_LOGIC_VECTOR(7 downto 0)
         );
     end component;
 
@@ -122,7 +122,7 @@ begin
             rst          => reset,
             UART_RXD_OUT => UART_RXD_OUT,
             UART_CTS     => UART_CTS,
-            data         => byte(7)
+            data         => byte
         );
 
     num_handler : number_handler

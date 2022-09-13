@@ -2,12 +2,12 @@
 # Vivado v2022.1 (64-bit)
 # SW Build 3526262 on Mon Apr 18 15:47:01 MDT 2022
 # IP Build 3524634 on Mon Apr 18 20:55:01 MDT 2022
-# Start of session at: Tue Sep 13 12:26:44 2022
-# Process ID: 665082
+# Start of session at: Tue Sep 13 20:53:53 2022
+# Process ID: 187639
 # Current directory: /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.runs/impl_1
 # Command line: vivado -log top.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source top.tcl -notrace
 # Log file: /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.runs/impl_1/top.vdi
 # Journal file: /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.runs/impl_1/vivado.jou
-# Running On: jakob-G550JK, OS: Linux, CPU Frequency: 2600.000 MHz, CPU Physical cores: 4, Host memory: 12427 MB
+# Running On: jakob-G550JK, OS: Linux, CPU Frequency: 3286.868 MHz, CPU Physical cores: 4, Host memory: 12427 MB
 #-----------------------------------------------------------
 source top.tcl -notrace

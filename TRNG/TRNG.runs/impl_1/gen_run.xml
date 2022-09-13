@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="impl_1" LaunchPart="xc7a50tcsg324-1" LaunchTime="1663064704">
+<GenRun Id="impl_1" LaunchPart="xc7a50tcsg324-1" LaunchTime="1663095139">
   <File Type="POSTROUTE-PHYSOPT-RQS-RPT" Name="postroute_physopt_report_qor_suggestions_0.rpt"/>
   <File Type="ROUTE-RQS-RPT" Name="route_report_qor_suggestions_0.rpt"/>
   <File Type="POSTROUTE-PHYSOPT-RQS" Name="top_postroute_physopted.rqs"/>
@@ -198,19 +198,28 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Area_ExploreWithRemap" Flow="Vivado Implementation 2022">
-      <Desc>Adds the remap optimization to reduce logic</Desc>
+    <StratHandle Name="Performance_ExplorePostRoutePhysOpt" Flow="Vivado Implementation 2022">
+      <Desc>Similar to Peformance_Explore, but enables the physical optimization step (phys_opt_design) with the Explore directive after routing.</Desc>
     </StratHandle>
     <Step Id="init_design"/>
     <Step Id="opt_design">
-      <Option Id="Directive">6</Option>
+      <Option Id="Directive">0</Option>
     </Step>
     <Step Id="power_opt_design"/>
-    <Step Id="place_design"/>
+    <Step Id="place_design">
+      <Option Id="Directive">0</Option>
+    </Step>
     <Step Id="post_place_power_opt_design"/>
-    <Step Id="phys_opt_design" EnableStepBool="0"/>
-    <Step Id="route_design"/>
-    <Step Id="post_route_phys_opt_design"/>
+    <Step Id="phys_opt_design">
+      <Option Id="Directive">0</Option>
+    </Step>
+    <Step Id="route_design">
+      <Option Id="MoreOptsStr"><![CDATA[-tns_cleanup]]></Option>
+      <Option Id="Directive">0</Option>
+    </Step>
+    <Step Id="post_route_phys_opt_design" EnableStepBool="1">
+      <Option Id="Directive">0</Option>
+    </Step>
     <Step Id="write_bitstream">
       <Option Id="BinFile">1</Option>
     </Step>
