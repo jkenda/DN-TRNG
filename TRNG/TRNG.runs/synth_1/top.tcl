@@ -73,6 +73,7 @@ OPTRACE "synth_1" START { ROLLUP_AUTO }
 set_param checkpoint.writeSynthRtdsInDcp 1
 set_param xicom.use_bs_reader 1
 set_param chipscope.maxJobs 2
+set_msg_config -id {Common 17-41} -limit 10000000
 set_msg_config -id {Synth 8-256} -limit 10000
 set_msg_config -id {Synth 8-638} -limit 10000
 OPTRACE "Creating in-memory project" START { }
@@ -95,6 +96,7 @@ read_vhdl -library xil_defaultlib {
   /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/new/oscillator.vhd
   /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/imports/vaja4_naloga/prescaler.vhd
   /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/new/random_byte.vhd
+  /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/new/uart.vhd
   /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/imports/KrmilnikVGA_2021_11_10/vsync.vhd
   /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/new/top.vhd
 }
@@ -102,7 +104,6 @@ read_vhdl -vhdl2008 -library xil_defaultlib {
   /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/new/display.vhd
   /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/new/limiter.vhd
   /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/new/random_bit.vhd
-  /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/new/uart.vhd
   /home/jakob/Dokumenti/DN/projekt/TRNG/TRNG.srcs/sources_1/imports/KrmilnikVGA_2021_11_10/vgaController.vhd
 }
 OPTRACE "Adding files" END { }

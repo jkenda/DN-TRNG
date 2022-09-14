@@ -18,8 +18,7 @@ entity top is
         VGA_HS       : out STD_LOGIC;
         VGA_VS       : out STD_LOGIC;
         UART_RXD_OUT : out STD_LOGIC;
-        UART_CTS     : in  STD_LOGIC;
-        LED16_R      : out STD_LOGIC
+        UART_CTS     : in  STD_LOGIC
     );
 end top;
 
@@ -74,9 +73,8 @@ architecture Behavioral of top is
             clk, rst : in STD_LOGIC;
             BTNC     : in  STD_LOGIC;
             SW       : in  STD_LOGIC_VECTOR (5 downto 0);
-            LED      : out STD_LOGIC_VECTOR (5 downto 0);
             byte     : in STD_LOGIC_VECTOR (7 downto 0);
-            number   : out STD_LOGIC_VECTOR (31 downto 0) := (others => '0')
+            output   : out STD_LOGIC_VECTOR (31 downto 0) := (others => '0')
         );
     end component;
 
@@ -87,8 +85,9 @@ architecture Behavioral of top is
 begin
 
     reset <= not rst;
-    LED16_R <= not UART_CTS;
-
+    
+    LED <= SW;
+    
     rand : random_bits
         generic map (
             width => 12
@@ -137,9 +136,8 @@ begin
             rst    => reset,
             BTNC   => BTNC,
             SW     => SW,
-            LED    => LED,
             byte   => rand_bits(7 downto 0),
-            number => number
+            output => number
         );
 
 end Behavioral;

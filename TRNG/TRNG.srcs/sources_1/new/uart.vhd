@@ -59,6 +59,8 @@ begin
     
     UART_RXD_OUT <= mem(to_integer(index));
     
+    pres_rst <= '1' when UART_CTS='1' and CTS_prev='0' else '0';
+    
     process(clk)
     begin
         if rising_edge(clk) then
@@ -72,12 +74,6 @@ begin
                 if UART_CTS='1' or index < 9 then
                     index <= (index + 1) mod 10;
                 end if;             
-            end if;
-            
-            if UART_CTS='1' and CTS_prev='0' then
-                pres_rst <= '1';
-            else
-                pres_rst <= '0';
             end if;
             
             CTS_prev <= UART_CTS;

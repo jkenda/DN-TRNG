@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a50tcsg324-1" LaunchTime="1663143008" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/top.dcp">
+<GenRun Id="synth_1" LaunchPart="xc7a50tcsg324-1" LaunchTime="1663185679" LaunchIncrCheckpoint="$PSRCDIR/utils_1/imports/synth_1/top.dcp">
   <File Type="VDS-TIMING-PB" Name="top_timing_summary_synth.pb"/>
   <File Type="VDS-TIMINGSUMMARY" Name="top_timing_summary_synth.rpt"/>
   <File Type="RDS-DCP" Name="top.dcp"/>
@@ -47,6 +47,12 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
+    <File Path="$PSRCDIR/sources_1/new/uart.vhd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
     <File Path="$PSRCDIR/sources_1/imports/KrmilnikVGA_2021_11_10/vsync.vhd">
       <FileInfo>
         <Attr Name="ImportPath" Val="$PPRDIR/../../predavanja/KrmilnikVGA_2021_11_10/vsync.vhd"/>
@@ -68,12 +74,6 @@
       </FileInfo>
     </File>
     <File Path="$PSRCDIR/sources_1/new/random_bit.vhd">
-      <FileInfo SFType="VHDL2008">
-        <Attr Name="UsedIn" Val="synthesis"/>
-        <Attr Name="UsedIn" Val="simulation"/>
-      </FileInfo>
-    </File>
-    <File Path="$PSRCDIR/sources_1/new/uart.vhd">
       <FileInfo SFType="VHDL2008">
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
@@ -128,14 +128,12 @@
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Flow_PerfOptimized_high" Flow="Vivado Synthesis 2022">
-      <Desc>Higher performance designs, resource sharing is turned off, the global fanout guide is set to a lower number, FSM extraction forced to one-hot, LUT combining is disabled, equivalent registers are preserved, SRL are inferred  with a larger threshold</Desc>
-    </StratHandle>
+    <StratHandle Name="Flow_PerfOptimized_high" Flow="Vivado Synthesis 2022"/>
     <Step Id="synth_design">
       <Option Id="KeepEquivalentRegisters">1</Option>
+      <Option Id="NoCombineLuts">1</Option>
       <Option Id="ShregMinSize">5</Option>
       <Option Id="Directive">7</Option>
-      <Option Id="NoCombineLuts">1</Option>
       <Option Id="FsmExtraction">1</Option>
       <Option Id="ResourceSharing">2</Option>
     </Step>
