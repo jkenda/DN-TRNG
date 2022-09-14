@@ -7,8 +7,11 @@
 
 #define MAX_SAMPLES 1000000 // milijon
 
+#define clear() printf("\033[2J\033[1;1H")
 
 size_t frekvenca[UINT8_MAX];
+uint8_t samples[MAX_SAMPLES];
+
 int prev_bars = -1;
 int prev_percent = -1;
 int prev_width = -1;
@@ -19,19 +22,19 @@ void print_progress(float progress)
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
     int window_width = w.ws_col;
 
-    int width   = window_width - 9;
+    int width   = window_width - 8;
     int bars    = fmax(round(progress * width), 0);
     int spaces  = width - bars;
     int percent = round(progress * 100);
     
     if (bars != prev_bars || percent != prev_percent || window_width != prev_width)
     {
+        if (window_width < prev_width) clear();
         printf("\r[");
-        for (int i = 0; i < bars; i++) putchar('=');
+        for (int i = 0; i < bars-1; i++) putchar('=');
         
-        if (bars > 0 && bars < width) putchar('>');
-        else if (bars == width) putchar('=');
-        else putchar(' ');
+        if (bars == width) putchar('=');
+        else if (bars > 0) putchar('>');
         
         for (int i = 0; i < spaces; i++) putchar(' ');
         printf("] %3d %%", percent);
@@ -79,9 +82,11 @@ void calc_pi(uint8_t rand_byte)
 
 int main()
 {
-    size_t samples = 0;
+    size_t nsamples = 0;
     size_t nicel = 0, enic = 0;
     size_t vsota = 0;
+
+    clear();
 
     for (int i = 0; i < MAX_SAMPLES; i++)
     {
@@ -100,22 +105,51 @@ int main()
                 enic++;
         }
         
+        samples[i] = byte;
         calc_pi(byte);
 
         vsota += byte;
-        samples++;
+        nsamples++;
         frekvenca[byte]++;
     }
-
+    
     fclose(stdin);
+
+    double E_bit  = enic  / (double) (nicel + enic);
+    double E_byte = vsota / (double) nsamples;
+
+    // standardni odklon
+    double sum = 0;
+    for (int i = 0; i < nsamples; i++)
+    {
+        double diff = samples[i] - E_byte;
+        sum += diff * diff;
+    }
+    double sN_byte = sqrt(sum / nsamples);
+
+    sum = 0;
+    for (int i = 0; i < nicel; i++)
+    {
+        double diff = 0 - E_bit;
+        sum += diff * diff;
+    }
+    for (int i = 0; i < enic; i++)
+    {
+        double diff = 1 - E_bit;
+        sum += diff * diff;
+    }
+    double sN_bit = sqrt(sum / (enic + nicel));
+
 
     double pi = (double) count / ncoords * 4;
 
-    printf("E(bit) = %lf, ", enic / (double) (nicel + enic));
-    printf("E(byte) = %lf, ", vsota / (double) samples);
-    printf("pi = %lf\n", pi);
+    printf("E(bit)  = %4.3lf, ",    E_bit);
+    printf("E(byte)  = %7.3lf\n\r", E_byte);
+    printf("sN(bit) = %4.3lf, ",    sN_bit);
+    printf("sN(byte) = %7.3lf\n\r", sN_byte);
+    printf("pi = %lf\n\r\n\r", pi);
 
-    printf("Saved info to results.csv\n");
+    printf("Frekvence shranjene v 'results.csv'\n\r");
 
     FILE *csv = fopen("results.csv", "w");
 
