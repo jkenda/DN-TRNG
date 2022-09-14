@@ -29,7 +29,7 @@ architecture Behavioral of uart is
         );
     end component;
     
-    signal mem : STD_LOGIC_VECTOR(7 downto 0);
+    signal mem : STD_LOGIC_VECTOR(9 downto 0);
     
     signal CTS_prev : STD_LOGIC;
     signal pres_rst : STD_LOGIC;
@@ -54,19 +54,20 @@ begin
             enable => E
         );
         
-    UART_RXD_OUT <= '0' when to_integer(index)  = 0 else 
-                    '1' when to_integer(index) >= 9 else 
-                    mem(to_integer(index - 1));
+    mem(0) <= '0';
+    mem(9) <= '1';
+    
+    UART_RXD_OUT <= mem(to_integer(index));
     
     process(clk)
     begin
         if rising_edge(clk) then
             if rst='1' then
-                mem   <= (others => '0');
+                mem(8 downto 1) <= (others => '0');
                 index <= to_unsigned(9, 4);
             elsif E='1' then
                 if index = 0 then
-                    mem   <= data;
+                    mem(8 downto 1) <= data;
                 end if;
                 if UART_CTS='1' or index < 9 then
                     index <= (index + 1) mod 10;

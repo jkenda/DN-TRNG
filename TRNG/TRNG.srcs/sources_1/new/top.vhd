@@ -25,11 +25,14 @@ end top;
 
 architecture Behavioral of top is
 
-    component random_byte is
+    component random_bits is
+        Generic (
+            width : integer := 8
+        );
         Port (
             clk    : in  STD_LOGIC;
             rst    : in  STD_LOGIC;
-            output : out STD_LOGIC_VECTOR(7 downto 0)
+            output : out STD_LOGIC_VECTOR(width-1 downto 0)
         );
     end component;
 
@@ -68,32 +71,35 @@ architecture Behavioral of top is
 
     component number_handler is
         Port (
-            clk, rst : in  STD_LOGIC;
+            clk, rst : in STD_LOGIC;
             BTNC     : in  STD_LOGIC;
-            SW       : in  STD_LOGIC_VECTOR(5 downto 0);
-            LED      : out STD_LOGIC_VECTOR(5 downto 0);
-            byte     : in  STD_LOGIC_VECTOR(7 downto 0);
-            number   : out STD_LOGIC_VECTOR(31 downto 0) := (others => '0')
+            SW       : in  STD_LOGIC_VECTOR (5 downto 0);
+            LED      : out STD_LOGIC_VECTOR (5 downto 0);
+            byte     : in STD_LOGIC_VECTOR (7 downto 0);
+            number   : out STD_LOGIC_VECTOR (31 downto 0) := (others => '0')
         );
     end component;
 
-    signal number : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
-    signal byte   : STD_LOGIC_VECTOR(7 downto 0) := (others => '0');
-    signal reset  : STD_LOGIC;
+    signal number    : STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
+    signal rand_bits : STD_LOGIC_VECTOR(11 downto 0) := (others => '0');
+    signal reset     : STD_LOGIC;
 
 begin
 
     reset <= not rst;
     LED16_R <= not UART_CTS;
 
-    random_byte_inst : random_byte
+    rand : random_bits
+        generic map (
+            width => 12
+        )
         port map (
             clk    => clk,
             rst    => reset,
-            output => byte
+            output => rand_bits
         );
 
-    display_inst : display
+    display_7seg : display
         port map (
             clk    => clk,
             rst    => reset,
@@ -111,9 +117,9 @@ begin
             VGA_R  => VGA_R,
             VGA_G  => VGA_G,
             VGA_B  => VGA_B,
-            R      => byte(3 downto 0),
-            G      => byte(3 downto 0),
-            B      => byte(3 downto 0)
+            R      => rand_bits(11 downto 8),
+            G      => rand_bits( 7 downto 4),
+            B      => rand_bits( 3 downto 0)
         );
 
     uart_comm : uart
@@ -122,7 +128,7 @@ begin
             rst          => reset,
             UART_RXD_OUT => UART_RXD_OUT,
             UART_CTS     => UART_CTS,
-            data         => byte
+            data         => rand_bits(11 downto 4)
         );
 
     num_handler : number_handler
@@ -132,7 +138,7 @@ begin
             BTNC   => BTNC,
             SW     => SW,
             LED    => LED,
-            byte   => byte,
+            byte   => rand_bits(7 downto 0),
             number => number
         );
 

@@ -38,7 +38,7 @@ begin
         oscillator_group: if i mod 5 = 0 generate
             oscil : oscillator
                 generic map (
-                    length => 7
+                    length => 5
                 )
                 port map(
                     rst => rst,
@@ -47,7 +47,7 @@ begin
         elsif i mod 5 = 1 generate
             oscil : oscillator
                 generic map (
-                    length => 11
+                    length => 7
                 )
                 port map(
                     rst => rst,
@@ -56,7 +56,7 @@ begin
         elsif i mod 5 = 2 generate
             oscil : oscillator
                 generic map (
-                    length => 13
+                    length => 11
                 )
                 port map(
                     rst => rst,
@@ -65,7 +65,7 @@ begin
         elsif i mod 5 = 3 generate
             oscil : oscillator
                 generic map (
-                    length => 17
+                    length => 13
                 )
                 port map(
                     rst => rst,
@@ -74,7 +74,7 @@ begin
         else generate
             oscil : oscillator
                 generic map (
-                    length => 19
+                    length => 17
                 )
                 port map(
                     rst => rst,

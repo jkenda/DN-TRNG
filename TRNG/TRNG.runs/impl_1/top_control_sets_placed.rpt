@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 ------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2022.1 (lin64) Build 3526262 Mon Apr 18 15:47:01 MDT 2022
-| Date         : Tue Sep 13 20:54:47 2022
+| Date         : Wed Sep 14 10:13:02 2022
 | Host         : jakob-G550JK running 64-bit Ubuntu 20.04.5 LTS
 | Command      : report_control_sets -verbose -file top_control_sets_placed.rpt
 | Design       : top
@@ -27,7 +27,7 @@ Table of Contents
 |    Minimum number of control sets                        |    14 |
 |    Addition due to synthesis replication                 |     0 |
 |    Addition due to physical synthesis replication        |     0 |
-| Unused register locations in slices containing registers |    43 |
+| Unused register locations in slices containing registers |    40 |
 +----------------------------------------------------------+-------+
 * Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
 ** Run report_qor_suggestions for automated merging and remapping suggestions
@@ -58,12 +58,12 @@ Table of Contents
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
-| No           | No                    | No                     |              26 |           16 |
+| No           | No                    | No                     |              30 |           21 |
 | No           | No                    | Yes                    |               0 |            0 |
 | No           | Yes                   | No                     |              36 |           12 |
-| Yes          | No                    | No                     |              35 |            8 |
+| Yes          | No                    | No                     |              35 |           11 |
 | Yes          | No                    | Yes                    |               0 |            0 |
-| Yes          | Yes                   | No                     |              68 |           27 |
+| Yes          | Yes                   | No                     |              67 |           26 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
 
@@ -73,20 +73,20 @@ Table of Contents
 +----------------+------------------------------------------+-------------------------------------------------+------------------+----------------+--------------+
 |  Clock Signal  |               Enable Signal              |                 Set/Reset Signal                | Slice Load Count | Bel Load Count | Bels / Slice |
 +----------------+------------------------------------------+-------------------------------------------------+------------------+----------------+--------------+
-|  clk_IBUF_BUFG | vga_inst/vsync_inst/q_i_1_n_0            | num_handler/SR[0]                               |                1 |              1 |         1.00 |
-|  clk_IBUF_BUFG | uart_comm/uart_prescaler/index_reg[3][0] | num_handler/SR[0]                               |                2 |              5 |         2.50 |
-|  clk_IBUF_BUFG | num_handler/number[7]_i_1_n_0            | num_handler/SR[0]                               |                2 |              8 |         4.00 |
+|  clk_IBUF_BUFG | vga_inst/vsync_inst/q_i_1__0_n_0         | num_handler/SR[0]                               |                1 |              1 |         1.00 |
+|  clk_IBUF_BUFG | uart_comm/uart_prescaler/index_reg[2][0] | num_handler/SR[0]                               |                2 |              4 |         2.00 |
 |  clk_IBUF_BUFG | num_handler/number[15]_i_1_n_0           | num_handler/SR[0]                               |                3 |              8 |         2.67 |
-|  clk_IBUF_BUFG | num_handler/number[31]_i_2_n_0           | num_handler/SR[0]                               |                3 |              8 |         2.67 |
-|  clk_IBUF_BUFG | num_handler/number[23]_i_1_n_0           | num_handler/SR[0]                               |                2 |              8 |         4.00 |
-|  clk_IBUF_BUFG | uart_comm/uart_prescaler/index_reg[4][0] | num_handler/SR[0]                               |                3 |              8 |         2.67 |
-|  clk_IBUF_BUFG |                                          | display_inst/display_prescaler/count[9]_i_1_n_0 |                3 |             10 |         3.33 |
-|  clk_IBUF_BUFG | vga_inst/hsync_inst/E[0]                 | vga_inst/vsync_inst/count[9]_i_1__0_n_0         |                5 |             10 |         2.00 |
+|  clk_IBUF_BUFG | num_handler/number[23]_i_1_n_0           | num_handler/SR[0]                               |                3 |              8 |         2.67 |
+|  clk_IBUF_BUFG | num_handler/number[31]_i_1_n_0           | num_handler/SR[0]                               |                3 |              8 |         2.67 |
+|  clk_IBUF_BUFG | num_handler/number[7]_i_1_n_0            | num_handler/SR[0]                               |                3 |              8 |         2.67 |
+|  clk_IBUF_BUFG | uart_comm/uart_prescaler/index_reg[3][0] | num_handler/SR[0]                               |                3 |              8 |         2.67 |
+|  clk_IBUF_BUFG |                                          | display_7seg/display_prescaler/count[9]_i_1_n_0 |                3 |             10 |         3.33 |
+|  clk_IBUF_BUFG | vga_inst/hsync_inst/clock_enable         | vga_inst/vsync_inst/count[9]_i_1__0_n_0         |                4 |             10 |         2.50 |
 |  clk_IBUF_BUFG |                                          | vga_inst/hsync_inst/count[11]_i_1_n_0           |                4 |             12 |         3.00 |
-|  clk_IBUF_BUFG | vga_inst/p_0_in                          | vga_inst/hsync_inst/count_reg[9]_0              |                6 |             12 |         2.00 |
+|  clk_IBUF_BUFG | vga_inst/p_0_in                          | vga_inst/VGA_R[3]_i_1_n_0                       |                4 |             12 |         3.00 |
 |  clk_IBUF_BUFG |                                          | uart_comm/uart_prescaler/count[13]_i_1_n_0      |                5 |             14 |         2.80 |
-|  clk_IBUF_BUFG |                                          |                                                 |               16 |             26 |         1.62 |
-|  clk_IBUF_BUFG | display_inst/display_prescaler/E[0]      |                                                 |                8 |             35 |         4.38 |
+|  clk_IBUF_BUFG |                                          |                                                 |               21 |             30 |         1.43 |
+|  clk_IBUF_BUFG | display_7seg/display_prescaler/E[0]      |                                                 |               11 |             35 |         3.18 |
 +----------------+------------------------------------------+-------------------------------------------------+------------------+----------------+--------------+
 
 
